@@ -70,17 +70,34 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
   ];
 
   Future<void> _handleExit() async {
-    final bool? shouldStay = await RewardExitModal.show(
+    await RewardExitModal.show(
       context,
-      title: 'Don\'t Leave Yet!',
-      subtitle: 'We have more rewards waiting for you. Are you sure you want to leave?',
-      icon: Icons.sentiment_very_dissatisfied,
-      iconColor: Colors.redAccent,
+      title: "Don't Leave Yet!",
+      subtitle: 'Scratch and win 50 bonus points just for staying with us 🎁',
+      icon: Icons.card_giftcard,
+      iconColor: Colors.amber,
+      primaryColor: Colors.deepPurple,
+      stayButtonText: 'Claim My Reward',
+      scratchTitle: 'Your Bonus Reward',
+      scratchOverlayColor: Colors.deepPurple,
+      onRevealed: () {},
+      rewardChild: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Icon(Icons.stars_rounded, size: 60, color: Colors.amber),
+          const SizedBox(height: 12),
+          Text(
+            '50 Bonus Points!',
+            style: GoogleFonts.outfit(fontSize: 26, fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 6),
+          Text(
+            'Credited to your account 🎉',
+            style: TextStyle(color: Colors.grey[600], fontSize: 13),
+          ),
+        ],
+      ),
     );
-    
-    if (shouldStay == false) {
-      debugPrint('User chose to leave');
-    }
   }
 
   @override
