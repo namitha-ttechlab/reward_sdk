@@ -158,8 +158,19 @@ class HomeScreen extends StatelessWidget {
               subtitle: 'Shield your savings with our new Premium Life Cover.',
               buttonText: 'EXPLORE',
               icon: Icons.shield_rounded,
-              onButtonPressed: () => _showInsuranceScratch(context),
-              onTap: () => _showInsuranceScratch(context),
+              onButtonPressed: () {},
+              scratchTitle: 'Insurance Voucher',
+              scratchOverlayColor: Colors.blueAccent,
+              scratchSize: const Size(320, 320),
+              rewardChild: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(Icons.security, size: 80, color: Colors.blue),
+                  const SizedBox(height: 16),
+                  Text('15% Discount', style: GoogleFonts.outfit(fontSize: 32, fontWeight: FontWeight.bold)),
+                  Text('Valid on first year premium', style: TextStyle(color: Colors.grey[600])),
+                ],
+              ),
             ),
           ),
 
@@ -181,20 +192,16 @@ class HomeScreen extends StatelessWidget {
             subtitle: 'Flat 500 OFF on Electronics',
             couponCode: 'AMZ500',
             icon: Icons.shopping_bag,
-            onTap: () => RewardScratchCard.showOverlay(
-              context,
-              title: 'Amazon Coupon',
-              size: const Size(300, 200),
-              onRevealed: () {},
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                   const Icon(Icons.store, size: 80, color: Colors.orange),
-                   const SizedBox(height: 16),
-                   Text('AMZ500', style: GoogleFonts.outfit(fontSize: 32, fontWeight: FontWeight.bold, letterSpacing: 4)),
-                   Text('Tap to copy code', style: TextStyle(color: Colors.grey[600])),
-                ],
-              ),
+            scratchTitle: 'Amazon Coupon',
+            scratchSize: const Size(300, 200),
+            rewardChild: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                 const Icon(Icons.store, size: 80, color: Colors.orange),
+                 const SizedBox(height: 16),
+                 Text('AMZ500', style: GoogleFonts.outfit(fontSize: 32, fontWeight: FontWeight.bold, letterSpacing: 4)),
+                 Text('Tap to copy code', style: TextStyle(color: Colors.grey[600])),
+              ],
             ),
           ),
 
@@ -223,26 +230,6 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  static void _handleExplore() {}
-
-  void _showInsuranceScratch(BuildContext context) {
-    RewardScratchCard.showOverlay(
-      context,
-      title: 'Insurance Voucher',
-      overlayColor: Colors.blueAccent,
-      size: const Size(320, 320),
-      onRevealed: () {},
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Icon(Icons.security, size: 80, color: Colors.blue),
-          const SizedBox(height: 16),
-          Text('15% Discount', style: GoogleFonts.outfit(fontSize: 32, fontWeight: FontWeight.bold)),
-          Text('Valid on first year premium', style: TextStyle(color: Colors.grey[600])),
-        ],
-      ),
-    );
-  }
 
   Widget _buildQuickAction(BuildContext context, IconData icon, String label, String? route) {
     return GestureDetector(

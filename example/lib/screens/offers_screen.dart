@@ -169,22 +169,54 @@ class OffersScreen extends StatelessWidget {
 
           SliverList(
             delegate: SliverChildListDelegate([
-              GestureDetector(
-                onTap: () => _showPromotion(
-                  context, 
-                  'Adidas', 
-                  'Level Up Your Style', 
-                  'Get 30% discount on all premium sportswear. Exclusively for Platinum cardholders.', 
-                  'https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=800&q=80',
-                  Colors.black,
-                ),
-                child: const RewardInlineTile(
-                  title: 'Adidas Premium',
-                  subtitle: 'Extra 30% off on Sportswear',
-                  couponCode: 'ADIBANK30',
-                  primaryColor: Colors.black,
-                  secondaryColor: Colors.amber,
-                  icon: Icons.flash_on,
+              RewardInlineTile(
+                title: 'Adidas Premium',
+                subtitle: 'Extra 30% off on Sportswear',
+                couponCode: 'ADIBANK30',
+                primaryColor: Colors.black,
+                secondaryColor: Colors.amber,
+                icon: Icons.flash_on,
+                scratchTitle: 'Adidas Exclusive Reveal',
+                scratchOverlayColor: Colors.black87,
+                scratchSize: const Size(320, 450),
+                rewardChild: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(12),
+                      child: Image.network(
+                        'https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?w=400&q=80',
+                        height: 180,
+                        width: 280,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Column(
+                        children: [
+                          Text(
+                            '30% DISCOUNT',
+                            style: GoogleFonts.outfit(
+                              fontSize: 28,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            'Level Up Your Style',
+                            style: TextStyle(
+                              color: Colors.grey[600],
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
               ),
               const SizedBox(height: 12),

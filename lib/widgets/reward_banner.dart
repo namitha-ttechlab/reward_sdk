@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'reward_scratch_card.dart';
 
 class RewardBanner extends StatelessWidget {
   final String title;
@@ -9,6 +10,12 @@ class RewardBanner extends StatelessWidget {
   final Color primaryColor;
   final Color secondaryColor;
   final VoidCallback? onTap;
+  final Widget? rewardChild;
+  final String? scratchTitle;
+  final Color? scratchOverlayColor;
+  final Size? scratchSize;
+  final Color? scratchBarrierColor;
+  final VoidCallback? onRevealed;
 
   const RewardBanner({
     super.key,
@@ -20,7 +27,30 @@ class RewardBanner extends StatelessWidget {
     this.primaryColor = Colors.deepPurple,
     this.secondaryColor = Colors.amber,
     this.onTap,
+    this.rewardChild,
+    this.scratchTitle,
+    this.scratchOverlayColor,
+    this.scratchSize,
+    this.scratchBarrierColor,
+    this.onRevealed,
   });
+
+  void _handleTap(BuildContext context) {
+    if (rewardChild != null) {
+      RewardScratchCard.showOverlay(
+        context,
+        child: rewardChild!,
+        size: scratchSize ?? const Size(300, 300),
+        title: scratchTitle ?? 'Scratch to Reveal',
+        overlayColor: scratchOverlayColor ?? const Color(0xFFBDBDBD),
+        barrierColor: scratchBarrierColor ?? const Color(0x99000000),
+        onRevealed: onRevealed ?? () {},
+      );
+    }
+    if (onTap != null) {
+      onTap!();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +72,7 @@ class RewardBanner extends StatelessWidget {
       child: Material(
         color: Colors.transparent,
         child: InkWell(
-          onTap: onTap,
+          onTap: () => _handleTap(context),
           borderRadius: BorderRadius.circular(20),
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
@@ -80,7 +110,10 @@ class RewardBanner extends StatelessWidget {
                   ),
                 ),
                 ElevatedButton(
-                  onPressed: onButtonPressed,
+                  onPressed: () {
+                    onButtonPressed();
+                    _handleTap(context);
+                  },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: secondaryColor,
                     foregroundColor: Colors.black,
