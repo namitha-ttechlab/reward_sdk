@@ -1,7 +1,9 @@
 name: reward_sdk
-description: "A new Flutter package project."
+description: "A premium Flutter SDK for implementing reward and loyalty features with beautiful, ready-to-use widgets like scratch cards, banners, and bottom sheets."
 version: 0.0.1
-homepage:
+homepage: https://github.com/namitha-ttechlab/reward_sdk
+repository: https://github.com/namitha-ttechlab/reward_sdk
+issue_tracker: https://github.com/namitha-ttechlab/reward_sdk/issues
 
 environment:
   sdk: ^3.9.2

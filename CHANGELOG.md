@@ -1,3 +1,13 @@
+# Changelog
+
 ## 0.0.1
 
-* TODO: Describe initial release.
+* Initial release of the `reward_sdk`.
+* Includes the following widgets:
+    * `RewardBottomSheet`
+    * `RewardBanner`
+    * `RewardCarousel`
+    * `RewardStickyBadge`
+    * `RewardInlineTile`
+    * `RewardExitModal`
+    * `RewardScratchCard`

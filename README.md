@@ -1,39 +1,72 @@
-<!--
-This README describes the package. If you publish this package to pub.dev,
-this README's contents appear on the landing page for your package.
+# reward_sdk
 
-For information about how to write a good package README, see the guide for
-[writing package pages](https://dart.dev/tools/pub/writing-package-pages).
+A premium Flutter SDK for implementing reward and loyalty features with beautiful, ready-to-use widgets. 
 
-For general information about developing packages, see the Dart guide for
-[creating packages](https://dart.dev/guides/libraries/create-packages)
-and the Flutter guide for
-[developing packages and plugins](https://flutter.dev/to/develop-packages).
--->
-
-TODO: Put a short description of the package here that helps potential users
-know whether this package might be useful for them.
+Bring gamified experiences to your app with high-quality UI components like scratch cards, bottom sheets, and banners.
 
 ## Features
 
-TODO: List what your package can do. Maybe include images, gifs, or videos.
+- 🎁 **RewardBottomSheet**: Elegant bottom sheet for presenting rewards.
+- 📣 **RewardBanner**: Customizable banner for announcements or promotions.
+- 🎠 **RewardCarousel**: Smooth carousel for showcasing multiple rewards.
+- 📍 **RewardStickyBadge**: Subtle, non-intrusive floating badge.
+- 📦 **RewardInlineTile**: Clean inline tile for reward listings.
+- 🚪 **RewardExitModal**: Engaging modal shown when users attempt to exit.
+- 🎫 **RewardScratchCard**: Interactive scratch card widget for a gamified reveal.
 
 ## Getting started
 
-TODO: List prerequisites and provide or point to information on how to
-start using the package.
+Add the package to your `pubspec.yaml`:
+
+```yaml
+dependencies:
+  reward_sdk:
+    git:
+      url: https://github.com/namitha-ttechlab/reward_sdk.git
+```
+
+Or for local development:
+
+```yaml
+dependencies:
+  reward_sdk:
+    path: path/to/reward_sdk
+```
+
+Run `flutter pub get` to install.
 
 ## Usage
 
-TODO: Include short and useful examples for package users. Add longer examples
-to `/example` folder.
+### Using RewardScratchCard
 
 ```dart
-const like = 'sample';
+import 'package:reward_sdk/reward_sdk.dart';
+
+RewardScratchCard(
+  title: 'Scratch and Win!',
+  subtitle: 'Better luck next time',
+  onScratchComplete: () {
+    print('Scratch completed!');
+  },
+)
 ```
+
+### Using RewardBottomSheet
+
+```dart
+import 'package:reward_sdk/reward_sdk.dart';
+
+showModalBottomSheet(
+  context: context,
+  builder: (context) => RewardBottomSheet(
+    title: 'Congratulations!',
+    message: 'You unlocked a new reward.',
+  ),
+);
+```
+
+Check the `example` folder for more comprehensive examples.
 
 ## Additional information
 
-TODO: Tell users more about the package: where to find more information, how to
-contribute to the package, how to file issues, what response they can expect
-from the package authors, and more.
+For documentation, issues, and contributions, please visit the [GitHub repository](https://github.com/namitha-ttechlab/reward_sdk).
