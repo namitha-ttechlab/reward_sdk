@@ -169,7 +169,7 @@ class _RewardCarouselState extends State<RewardCarousel> {
           );
         },
       ),
-    );
+    ));
   }
 }
 

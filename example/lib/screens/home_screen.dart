@@ -8,17 +8,17 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final List<RewardCarouselItem> carouselItems = [
-   kgroundColor: Colors.black,
-        scratchTitle: 'Premium Credit Reveal',
-        rewardChild: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            RewardCarouselItem(
+      RewardCarouselItem(
         title: 'Apple Store Credit',
         subtitle: 'Get 50 credit with your Platinum Card',
         tag: 'ULTRA PREMIUM',
         imageUrl: 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=800&q=80',
-        bac   const Icon(Icons.apple, size: 80, color: Colors.black),
+        backgroundColor: Colors.black,
+        scratchTitle: 'Premium Credit Reveal',
+        rewardChild: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(Icons.apple, size: 80, color: Colors.black),
             const SizedBox(height: 16),
             Text('50 Credit', style: GoogleFonts.outfit(fontSize: 32, fontWeight: FontWeight.bold)),
             Text('Applied to your account', style: TextStyle(color: Colors.grey[600])),
