@@ -14,8 +14,19 @@ class HomeScreen extends StatelessWidget {
         tag: 'ULTRA PREMIUM',
         imageUrl: 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=800&q=80',
         backgroundColor: Colors.black,
-        onTap: () => ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Opening Apple Store Offers...')),
+        onTap: () => RewardScratchCard.showBottomSheet(
+          context,
+          title: 'Premium Credit Reveal',
+          onRevealed: () {},
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Icon(Icons.apple, size: 80, color: Colors.black),
+              const SizedBox(height: 16),
+              Text('50 Credit', style: GoogleFonts.outfit(fontSize: 32, fontWeight: FontWeight.bold)),
+              Text('Applied to your account', style: TextStyle(color: Colors.grey[600])),
+            ],
+          ),
         ),
       ),
       RewardCarouselItem(
@@ -24,8 +35,20 @@ class HomeScreen extends StatelessWidget {
         tag: 'DAILY PERKS',
         imageUrl: 'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=800&q=80',
         backgroundColor: Colors.green[900]!,
-        onTap: () => ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Viewing Starbucks Rewards...')),
+        onTap: () => RewardScratchCard.showBottomSheet(
+          context,
+          title: 'Daily perk Reveal',
+          overlayColor: Colors.green,
+          onRevealed: () {},
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Icon(Icons.coffee, size: 80, color: Colors.brown),
+              const SizedBox(height: 16),
+              Text('Free Latte', style: GoogleFonts.outfit(fontSize: 32, fontWeight: FontWeight.bold)),
+              Text('Redeem at any store', style: TextStyle(color: Colors.grey[600])),
+            ],
+          ),
         ),
       ),
       RewardCarouselItem(
@@ -35,8 +58,20 @@ class HomeScreen extends StatelessWidget {
         tag: 'TRAVEL MAX',
         imageUrl: 'https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=800&q=80',
         backgroundColor: Colors.red[900]!,
-        onTap: () => ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Checking Emirates Miles...')),
+        onTap: () => RewardScratchCard.showBottomSheet(
+          context,
+          title: 'Airline Miles Reveal',
+          overlayColor: Colors.redAccent,
+          onRevealed: () {},
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Icon(Icons.flight_takeoff, size: 80, color: Colors.blue),
+              const SizedBox(height: 16),
+              Text('2,500 Miles', style: GoogleFonts.outfit(fontSize: 32, fontWeight: FontWeight.bold)),
+              Text('Credited to Skywards account', style: TextStyle(color: Colors.grey[600])),
+            ],
+          ),
         ),
       ),
 
@@ -125,16 +160,53 @@ class HomeScreen extends StatelessWidget {
             height: 200,
           ),
 
-          const Padding(
-            padding: EdgeInsets.all(24.0),
+          Padding(
+            padding: const EdgeInsets.all(24.0),
             child: RewardBanner(
               title: 'Insurance & Protection',
               subtitle: 'Shield your savings with our new Premium Life Cover.',
               buttonText: 'EXPLORE',
               icon: Icons.shield_rounded,
-              onButtonPressed: _handleExplore,
+              onButtonPressed: () => _showInsuranceScratch(context),
+              onTap: () => _showInsuranceScratch(context),
             ),
           ),
+
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24.0),
+            child: Text(
+              'Your Coupons',
+              style: GoogleFonts.outfit(
+                fontSize: 22,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+
+          const SizedBox(height: 12),
+
+          RewardInlineTile(
+            title: 'Amazon Shopping',
+            subtitle: 'Flat 500 OFF on Electronics',
+            couponCode: 'AMZ500',
+            icon: Icons.shopping_bag,
+            onTap: () => RewardScratchCard.showBottomSheet(
+              context,
+              title: 'Amazon Coupon',
+              onRevealed: () {},
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                   const Icon(Icons.store, size: 80, color: Colors.orange),
+                   const SizedBox(height: 16),
+                   Text('AMZ500', style: GoogleFonts.outfit(fontSize: 32, fontWeight: FontWeight.bold, letterSpacing: 4)),
+                   Text('Tap to copy code', style: TextStyle(color: Colors.grey[600])),
+                ],
+              ),
+            ),
+          ),
+
+          const SizedBox(height: 24),
 
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24.0),
@@ -160,6 +232,24 @@ class HomeScreen extends StatelessWidget {
   }
 
   static void _handleExplore() {}
+
+  void _showInsuranceScratch(BuildContext context) {
+    RewardScratchCard.showBottomSheet(
+      context,
+      title: 'Insurance Voucher',
+      overlayColor: Colors.blueAccent,
+      onRevealed: () {},
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Icon(Icons.security, size: 80, color: Colors.blue),
+          const SizedBox(height: 16),
+          Text('15% Discount', style: GoogleFonts.outfit(fontSize: 32, fontWeight: FontWeight.bold)),
+          Text('Valid on first year premium', style: TextStyle(color: Colors.grey[600])),
+        ],
+      ),
+    );
+  }
 
   Widget _buildQuickAction(BuildContext context, IconData icon, String label, String? route) {
     return GestureDetector(

@@ -136,13 +136,20 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
             RewardStickyBadge(
               bottom: 110,
               onTap: () {
-
-                RewardBottomSheet.show(
+                RewardScratchCard.showBottomSheet(
                   context,
-                  title: 'New Achievement!',
-                  subtitle: 'You just unlocked the "Super Saver" badge!',
-                  icon: Icons.auto_awesome,
-                  iconColor: Colors.purpleAccent,
+                  title: 'Mystery Achievement',
+                  overlayColor: Colors.deepPurple,
+                  onRevealed: () {},
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Icon(Icons.stars_rounded, size: 80, color: Colors.amber),
+                      const SizedBox(height: 16),
+                      Text('Top Saver', style: GoogleFonts.outfit(fontSize: 32, fontWeight: FontWeight.bold)),
+                      Text('You reached the milestone!', style: TextStyle(color: Colors.grey[600])),
+                    ],
+                  ),
                 );
               },
             ),

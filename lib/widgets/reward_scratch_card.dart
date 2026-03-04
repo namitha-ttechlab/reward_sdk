@@ -61,6 +61,52 @@ class RewardScratchCard extends StatefulWidget {
     );
   }
 
+  static void showBottomSheet(
+    BuildContext context, {
+    required Widget child,
+    Color overlayColor = const Color(0xFFBDBDBD),
+    String title = 'Scratch to Reveal',
+    IconData icon = Icons.stars_rounded,
+    required VoidCallback onRevealed,
+  }) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => Container(
+        height: MediaQuery.of(context).size.height * 0.7,
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.vertical(top: Radius.circular(32)),
+        ),
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          children: [
+            Container(
+              width: 40,
+              height: 4,
+              margin: const EdgeInsets.only(bottom: 24),
+              decoration: BoxDecoration(
+                color: Colors.grey[300],
+                borderRadius: BorderRadius.circular(2),
+              ),
+            ),
+            Expanded(
+              child: RewardScratchCard(
+                overlayColor: overlayColor,
+                title: title,
+                icon: icon,
+                onRevealed: onRevealed,
+                child: child,
+              ),
+            ),
+            const SizedBox(height: 24),
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   State<RewardScratchCard> createState() => _RewardScratchCardState();
 }

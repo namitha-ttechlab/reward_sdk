@@ -35,7 +35,11 @@ class _RewardCarouselState extends State<RewardCarousel> {
   void initState() {
     super.initState();
     _pageController = PageController(initialPage: 0);
+    _startAutoScroll();
+  }
 
+  void _startAutoScroll() {
+    _stopAutoScroll();
     if (widget.autoScroll && widget.items.isNotEmpty) {
       _timer = Timer.periodic(widget.scrollInterval, (timer) {
         if (_pageController.hasClients) {
@@ -48,6 +52,11 @@ class _RewardCarouselState extends State<RewardCarousel> {
         }
       });
     }
+  }
+
+  void _stopAutoScroll() {
+    _timer?.cancel();
+    _timer = null;
   }
 
 
@@ -63,13 +72,22 @@ class _RewardCarouselState extends State<RewardCarousel> {
   Widget build(BuildContext context) {
     return SizedBox(
       height: widget.height,
-      child: PageView.builder(
-        controller: _pageController,
-        onPageChanged: (index) {
-          setState(() {
-            _currentPage = index;
-          });
+      child: NotificationListener<ScrollNotification>(
+        onNotification: (notification) {
+          if (notification is ScrollStartNotification) {
+            _stopAutoScroll();
+          } else if (notification is ScrollEndNotification) {
+             _startAutoScroll();
+          }
+          return false;
         },
+        child: PageView.builder(
+          controller: _pageController,
+          onPageChanged: (index) {
+            setState(() {
+              _currentPage = index;
+            });
+          },
         itemCount: widget.items.length,
         itemBuilder: (context, index) {
           final item = widget.items[index];
