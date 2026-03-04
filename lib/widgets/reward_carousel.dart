@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 
 import 'package:google_fonts/google_fonts.dart';
+import 'reward_scratch_card.dart';
 
 class RewardCarousel extends StatefulWidget {
   final List<RewardCarouselItem> items;
@@ -92,7 +93,20 @@ class _RewardCarouselState extends State<RewardCarousel> {
         itemBuilder: (context, index) {
           final item = widget.items[index];
           return GestureDetector(
-            onTap: item.onTap,
+            onTap: () {
+              if (item.rewardChild != null) {
+                RewardScratchCard.showBottomSheet(
+                  context,
+                  child: item.rewardChild!,
+                  title: item.scratchTitle ?? 'Scratch to Reveal',
+                  overlayColor: item.scratchOverlayColor ?? const Color(0xFFBDBDBD),
+                  onRevealed: item.onRevealed ?? () {},
+                );
+              }
+              if (item.onTap != null) {
+                item.onTap!();
+              }
+            },
             child: Container(
               margin: const EdgeInsets.all(20),
               decoration: BoxDecoration(
@@ -166,6 +180,10 @@ class RewardCarouselItem {
   final String imageUrl;
   final Color backgroundColor;
   final VoidCallback? onTap;
+  final Widget? rewardChild;
+  final String? scratchTitle;
+  final Color? scratchOverlayColor;
+  final VoidCallback? onRevealed;
 
   const RewardCarouselItem({
     required this.title,
@@ -174,5 +192,9 @@ class RewardCarouselItem {
     required this.imageUrl,
     required this.backgroundColor,
     this.onTap,
+    this.rewardChild,
+    this.scratchTitle,
+    this.scratchOverlayColor,
+    this.onRevealed,
   });
 }

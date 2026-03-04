@@ -8,25 +8,21 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final List<RewardCarouselItem> carouselItems = [
-      RewardCarouselItem(
+   kgroundColor: Colors.black,
+        scratchTitle: 'Premium Credit Reveal',
+        rewardChild: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            RewardCarouselItem(
         title: 'Apple Store Credit',
         subtitle: 'Get 50 credit with your Platinum Card',
         tag: 'ULTRA PREMIUM',
         imageUrl: 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=800&q=80',
-        backgroundColor: Colors.black,
-        onTap: () => RewardScratchCard.showBottomSheet(
-          context,
-          title: 'Premium Credit Reveal',
-          onRevealed: () {},
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Icon(Icons.apple, size: 80, color: Colors.black),
-              const SizedBox(height: 16),
-              Text('50 Credit', style: GoogleFonts.outfit(fontSize: 32, fontWeight: FontWeight.bold)),
-              Text('Applied to your account', style: TextStyle(color: Colors.grey[600])),
-            ],
-          ),
+        bac   const Icon(Icons.apple, size: 80, color: Colors.black),
+            const SizedBox(height: 16),
+            Text('50 Credit', style: GoogleFonts.outfit(fontSize: 32, fontWeight: FontWeight.bold)),
+            Text('Applied to your account', style: TextStyle(color: Colors.grey[600])),
+          ],
         ),
       ),
       RewardCarouselItem(
@@ -35,43 +31,34 @@ class HomeScreen extends StatelessWidget {
         tag: 'DAILY PERKS',
         imageUrl: 'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=800&q=80',
         backgroundColor: Colors.green[900]!,
-        onTap: () => RewardScratchCard.showBottomSheet(
-          context,
-          title: 'Daily perk Reveal',
-          overlayColor: Colors.green,
-          onRevealed: () {},
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Icon(Icons.coffee, size: 80, color: Colors.brown),
-              const SizedBox(height: 16),
-              Text('Free Latte', style: GoogleFonts.outfit(fontSize: 32, fontWeight: FontWeight.bold)),
-              Text('Redeem at any store', style: TextStyle(color: Colors.grey[600])),
-            ],
-          ),
+        scratchTitle: 'Daily perk Reveal',
+        scratchOverlayColor: Colors.green,
+        rewardChild: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(Icons.coffee, size: 80, color: Colors.brown),
+            const SizedBox(height: 16),
+            Text('Free Latte', style: GoogleFonts.outfit(fontSize: 32, fontWeight: FontWeight.bold)),
+            Text('Redeem at any store', style: TextStyle(color: Colors.grey[600])),
+          ],
         ),
       ),
       RewardCarouselItem(
-
         title: 'Emirates Skywards',
         subtitle: 'Earn 2x miles on international bookings',
         tag: 'TRAVEL MAX',
         imageUrl: 'https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=800&q=80',
         backgroundColor: Colors.red[900]!,
-        onTap: () => RewardScratchCard.showBottomSheet(
-          context,
-          title: 'Airline Miles Reveal',
-          overlayColor: Colors.redAccent,
-          onRevealed: () {},
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Icon(Icons.flight_takeoff, size: 80, color: Colors.blue),
-              const SizedBox(height: 16),
-              Text('2,500 Miles', style: GoogleFonts.outfit(fontSize: 32, fontWeight: FontWeight.bold)),
-              Text('Credited to Skywards account', style: TextStyle(color: Colors.grey[600])),
-            ],
-          ),
+        scratchTitle: 'Airline Miles Reveal',
+        scratchOverlayColor: Colors.redAccent,
+        rewardChild: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(Icons.flight_takeoff, size: 80, color: Colors.blue),
+            const SizedBox(height: 16),
+            Text('2,500 Miles', style: GoogleFonts.outfit(fontSize: 32, fontWeight: FontWeight.bold)),
+            Text('Credited to Skywards account', style: TextStyle(color: Colors.grey[600])),
+          ],
         ),
       ),
 
