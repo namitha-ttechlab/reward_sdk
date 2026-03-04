@@ -107,6 +107,65 @@ class RewardScratchCard extends StatefulWidget {
     );
   }
 
+  static void showOverlay(
+    BuildContext context, {
+    required Widget child,
+    Size size = const Size(300, 300),
+    Color overlayColor = const Color(0xFFBDBDBD),
+    Color barrierColor = const Color(0x99000000),
+    String title = 'Scratch to Reveal',
+    IconData icon = Icons.stars_rounded,
+    required VoidCallback onRevealed,
+  }) {
+    final overlay = Overlay.of(context);
+    late OverlayEntry entry;
+
+    entry = OverlayEntry(
+      builder: (context) => Material(
+        color: Colors.transparent,
+        child: Stack(
+          children: [
+            GestureDetector(
+              onTap: () => entry.remove(),
+              child: Container(
+                color: barrierColor,
+              ),
+            ),
+            Center(
+              child: SizedBox(
+                width: size.width,
+                height: size.height + 60,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Align(
+                      alignment: Alignment.topRight,
+                      child: IconButton(
+                        onPressed: () => entry.remove(),
+                        icon: const Icon(Icons.close, color: Colors.white, size: 28),
+                      ),
+                    ),
+                    Expanded(
+                      child: RewardScratchCard(
+                        overlayColor: overlayColor,
+                        title: title,
+                        icon: icon,
+                        onRevealed: onRevealed,
+                        child: child,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+
+    overlay.insert(entry);
+  }
+
   @override
   State<RewardScratchCard> createState() => _RewardScratchCardState();
 }

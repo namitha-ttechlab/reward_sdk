@@ -95,11 +95,13 @@ class _RewardCarouselState extends State<RewardCarousel> {
           return GestureDetector(
             onTap: () {
               if (item.rewardChild != null) {
-                RewardScratchCard.showBottomSheet(
+                RewardScratchCard.showOverlay(
                   context,
                   child: item.rewardChild!,
+                  size: item.scratchSize ?? const Size(300, 300),
                   title: item.scratchTitle ?? 'Scratch to Reveal',
                   overlayColor: item.scratchOverlayColor ?? const Color(0xFFBDBDBD),
+                  barrierColor: item.scratchBarrierColor ?? const Color(0x99000000),
                   onRevealed: item.onRevealed ?? () {},
                 );
               }
@@ -183,6 +185,8 @@ class RewardCarouselItem {
   final Widget? rewardChild;
   final String? scratchTitle;
   final Color? scratchOverlayColor;
+  final Size? scratchSize;
+  final Color? scratchBarrierColor;
   final VoidCallback? onRevealed;
 
   const RewardCarouselItem({
@@ -195,6 +199,8 @@ class RewardCarouselItem {
     this.rewardChild,
     this.scratchTitle,
     this.scratchOverlayColor,
+    this.scratchSize,
+    this.scratchBarrierColor,
     this.onRevealed,
   });
 }

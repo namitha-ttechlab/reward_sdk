@@ -15,6 +15,8 @@ class HomeScreen extends StatelessWidget {
         imageUrl: 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=800&q=80',
         backgroundColor: Colors.black,
         scratchTitle: 'Premium Credit Reveal',
+        scratchSize: const Size(320, 320),
+        scratchBarrierColor: Colors.black.withOpacity(0.8),
         rewardChild: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -33,6 +35,7 @@ class HomeScreen extends StatelessWidget {
         backgroundColor: Colors.green[900]!,
         scratchTitle: 'Daily perk Reveal',
         scratchOverlayColor: Colors.green,
+        scratchSize: const Size(280, 280),
         rewardChild: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -51,6 +54,7 @@ class HomeScreen extends StatelessWidget {
         backgroundColor: Colors.red[900]!,
         scratchTitle: 'Airline Miles Reveal',
         scratchOverlayColor: Colors.redAccent,
+        scratchSize: const Size(350, 250),
         rewardChild: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -177,9 +181,10 @@ class HomeScreen extends StatelessWidget {
             subtitle: 'Flat 500 OFF on Electronics',
             couponCode: 'AMZ500',
             icon: Icons.shopping_bag,
-            onTap: () => RewardScratchCard.showBottomSheet(
+            onTap: () => RewardScratchCard.showOverlay(
               context,
               title: 'Amazon Coupon',
+              size: const Size(300, 200),
               onRevealed: () {},
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -221,10 +226,11 @@ class HomeScreen extends StatelessWidget {
   static void _handleExplore() {}
 
   void _showInsuranceScratch(BuildContext context) {
-    RewardScratchCard.showBottomSheet(
+    RewardScratchCard.showOverlay(
       context,
       title: 'Insurance Voucher',
       overlayColor: Colors.blueAccent,
+      size: const Size(320, 320),
       onRevealed: () {},
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,

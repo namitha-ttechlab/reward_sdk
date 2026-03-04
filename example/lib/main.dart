@@ -136,10 +136,11 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
             RewardStickyBadge(
               bottom: 110,
               onTap: () {
-                RewardScratchCard.showBottomSheet(
+                RewardScratchCard.showOverlay(
                   context,
                   title: 'Mystery Achievement',
                   overlayColor: Colors.deepPurple,
+                  size: const Size(300, 300),
                   onRevealed: () {},
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
