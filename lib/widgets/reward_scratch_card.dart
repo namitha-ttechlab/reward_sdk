@@ -332,76 +332,83 @@ class _ScratchPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     // 1. Draw the Overlay Layer
-    final paint = Paint()
-      ..color = overlayColor
-      ..isAntiAlias = true;
-
-    // Premium Holographic/Metallic Effect with Shine
     final rect = Rect.fromLTWH(0, 0, size.width, size.height);
-    final shineOffset = (pulseValue * 2 - 1) * size.width;
+    canvas.saveLayer(rect, Paint());
+    
+    // Draw background color and premium gradient
+    final rrect = RRect.fromRectAndRadius(rect, const Radius.circular(24));
+    
     final gradient = LinearGradient(
       colors: [
         overlayColor,
-        overlayColor.withAlpha(220),
-        Colors.white.withOpacity(0.3),
-        overlayColor.withAlpha(220),
+        overlayColor.withAlpha(200),
+        Colors.white.withOpacity(0.15),
+        overlayColor.withAlpha(200),
         overlayColor,
       ],
       stops: const [0.0, 0.3, 0.5, 0.7, 1.0],
       begin: Alignment(pulseValue * 4 - 2, -1),
       end: Alignment(pulseValue * 4, 1),
     ).createShader(rect);
-
-    canvas.saveLayer(rect, Paint());
     
-    // Draw background
-    canvas.drawRRect(
-      RRect.fromRectAndRadius(rect, const Radius.circular(24)),
-      Paint()..shader = gradient,
-    );
+    canvas.drawRRect(rrect, Paint()..shader = gradient);
 
-    // Draw pattern (subtle lines for texture)
+    // Draw procedural wavy pattern (concentric waves effect)
     final patternPaint = Paint()
-      ..color = Colors.white.withOpacity(0.1)
-      ..strokeWidth = 1.0;
-    for (double i = 0; i < size.width + size.height; i += 10) {
-      canvas.drawLine(Offset(i, 0), Offset(i - size.height, size.height), patternPaint);
+      ..color = Colors.white.withOpacity(0.08)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 2.0;
+    
+    canvas.clipRRect(rrect);
+    for (double i = 0; i < size.width + size.height; i += 25) {
+      canvas.drawCircle(Offset(size.width / 2, size.height / 2), i, patternPaint);
     }
 
-    // Draw Text & Icon with Pulse
-    final pulseScale = 1.0 + (0.05 * math.sin(pulseValue * math.pi)); // Subtle pulse
+    // Draw Text & Icon centered together as a block
+    final contentOpacity = (0.8 + (0.2 * math.sin(pulseValue * math.pi))).clamp(0.0, 1.0);
     
-    final textPainter = TextPainter(
-      text: TextSpan(
-        text: title,
-        style: TextStyle(
-          color: Colors.black.withOpacity(0.4 + (0.2 * pulseValue)),
-          fontWeight: FontWeight.w700,
-          fontSize: 16,
-          letterSpacing: 1.2,
-        ),
-      ),
-      textDirection: TextDirection.ltr,
-    )..layout(minWidth: 0, maxWidth: size.width);
-
     final iconPainter = TextPainter(
       text: TextSpan(
         text: String.fromCharCode(icon.codePoint),
         style: TextStyle(
-          fontSize: 48,
+          fontSize: 72,
           fontFamily: icon.fontFamily,
           package: icon.fontPackage,
-          color: Colors.black.withOpacity(0.4),
+          color: Colors.white.withOpacity(contentOpacity),
+          shadows: [
+            Shadow(color: Colors.black.withOpacity(0.2), offset: const Offset(0, 4), blurRadius: 8),
+          ],
         ),
       ),
       textDirection: TextDirection.ltr,
     )..layout();
 
+    final textPainter = TextPainter(
+      text: TextSpan(
+        text: title.toUpperCase(),
+        style: TextStyle(
+          color: Colors.white.withOpacity(contentOpacity),
+          fontWeight: FontWeight.w700,
+          fontSize: 16,
+          letterSpacing: 2.0,
+          shadows: [
+            Shadow(color: Colors.black.withOpacity(0.2), offset: const Offset(0, 2), blurRadius: 4),
+          ],
+        ),
+      ),
+      textDirection: TextDirection.ltr,
+    )..layout(minWidth: 0, maxWidth: size.width - 40);
+
+    // Calculate total height to center the block
+    const spacing = 12.0;
+    final totalContentHeight = iconPainter.height + spacing + textPainter.height;
+    final topOffset = (size.height - totalContentHeight) / 2;
+
     iconPainter.paint(
       canvas,
       Offset(
         size.width / 2 - iconPainter.width / 2,
-        size.height / 2 - iconPainter.height / 2 - 20,
+        topOffset,
       ),
     );
 
@@ -409,14 +416,14 @@ class _ScratchPainter extends CustomPainter {
       canvas,
       Offset(
         size.width / 2 - textPainter.width / 2,
-        size.height / 2 + 30,
+        topOffset + iconPainter.height + spacing,
       ),
     );
 
     // 2. Erase the Scratch Paths
     final erasePaint = Paint()
       ..blendMode = BlendMode.clear
-      ..strokeWidth = 40.0
+      ..strokeWidth = 45.0
       ..strokeCap = StrokeCap.round
       ..style = PaintingStyle.stroke;
 
