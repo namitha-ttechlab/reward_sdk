@@ -9,6 +9,7 @@ class RewardScratchCard extends StatefulWidget {
   final IconData icon;
   final VoidCallback onRevealed;
   final double threshold;
+  final double aspectRatio;
 
   const RewardScratchCard({
     super.key,
@@ -18,6 +19,7 @@ class RewardScratchCard extends StatefulWidget {
     this.icon = Icons.stars_rounded,
     required this.onRevealed,
     this.threshold = 0.5,
+    this.aspectRatio = 1.0,
   });
 
   static void show(
@@ -27,6 +29,7 @@ class RewardScratchCard extends StatefulWidget {
     String title = 'Scratch to Reveal',
     IconData icon = Icons.stars_rounded,
     required VoidCallback onRevealed,
+    double aspectRatio = 1.0,
   }) {
     showDialog(
       context: context,
@@ -53,6 +56,7 @@ class RewardScratchCard extends StatefulWidget {
               title: title,
               icon: icon,
               onRevealed: onRevealed,
+              aspectRatio: aspectRatio,
               child: child,
             ),
           ],
@@ -68,6 +72,7 @@ class RewardScratchCard extends StatefulWidget {
     String title = 'Scratch to Reveal',
     IconData icon = Icons.stars_rounded,
     required VoidCallback onRevealed,
+    double aspectRatio = 1.0,
   }) {
     showModalBottomSheet(
       context: context,
@@ -97,6 +102,7 @@ class RewardScratchCard extends StatefulWidget {
                 title: title,
                 icon: icon,
                 onRevealed: onRevealed,
+                aspectRatio: aspectRatio,
                 child: child,
               ),
             ),
@@ -116,6 +122,7 @@ class RewardScratchCard extends StatefulWidget {
     String title = 'Scratch to Reveal',
     IconData icon = Icons.stars_rounded,
     required VoidCallback onRevealed,
+    double aspectRatio = 0.8,
   }) {
     final overlay = Overlay.of(context);
     late OverlayEntry entry;
@@ -151,6 +158,7 @@ class RewardScratchCard extends StatefulWidget {
                         title: title,
                         icon: icon,
                         onRevealed: onRevealed,
+                        aspectRatio: aspectRatio,
                         child: child,
                       ),
                     ),
@@ -219,7 +227,7 @@ class _RewardScratchCardState extends State<RewardScratchCard> with SingleTicker
   @override
   Widget build(BuildContext context) {
     return AspectRatio(
-      aspectRatio: 1.0,
+      aspectRatio: widget.aspectRatio,
       child: Container(
         width: double.infinity,
         decoration: BoxDecoration(
@@ -364,51 +372,67 @@ class _ScratchPainter extends CustomPainter {
       canvas.drawCircle(Offset(size.width / 2, size.height / 2), i, patternPaint);
     }
 
-    // Draw Text & Icon centered together as a block
-    final contentOpacity = (0.8 + (0.2 * math.sin(pulseValue * math.pi))).clamp(0.0, 1.0);
+    // Draw Content centered together as a block
+    final contentOpacity = (0.9 + (0.1 * math.sin(pulseValue * math.pi))).clamp(0.0, 1.0);
     
-    final iconPainter = TextPainter(
-      text: TextSpan(
-        text: String.fromCharCode(icon.codePoint),
-        style: TextStyle(
-          fontSize: 72,
-          fontFamily: icon.fontFamily,
-          package: icon.fontPackage,
-          color: Colors.white.withOpacity(contentOpacity),
-          shadows: [
-            Shadow(color: Colors.black.withOpacity(0.2), offset: const Offset(0, 4), blurRadius: 8),
-          ],
-        ),
-      ),
-      textDirection: TextDirection.ltr,
-    )..layout();
-
+    // Draw white circle background for the icon
+    final circleRadius = 45.0;
+    final iconSize = 48.0;
+    const spacing = 20.0;
+    
     final textPainter = TextPainter(
       text: TextSpan(
         text: title.toUpperCase(),
         style: TextStyle(
           color: Colors.white.withOpacity(contentOpacity),
-          fontWeight: FontWeight.w700,
-          fontSize: 16,
-          letterSpacing: 2.0,
+          fontWeight: FontWeight.w800,
+          fontSize: 18,
+          letterSpacing: 1.5,
           shadows: [
-            Shadow(color: Colors.black.withOpacity(0.2), offset: const Offset(0, 2), blurRadius: 4),
+            Shadow(color: Colors.black.withOpacity(0.1), offset: const Offset(0, 2), blurRadius: 4),
           ],
         ),
       ),
       textDirection: TextDirection.ltr,
     )..layout(minWidth: 0, maxWidth: size.width - 40);
 
-    // Calculate total height to center the block
-    const spacing = 12.0;
-    final totalContentHeight = iconPainter.height + spacing + textPainter.height;
+    final totalContentHeight = (circleRadius * 2) + spacing + textPainter.height;
+    final centerY = size.height / 2;
     final topOffset = (size.height - totalContentHeight) / 2;
+
+    // Center of the white circle
+    final circleCenter = Offset(size.width / 2, topOffset + circleRadius);
+    
+    canvas.drawCircle(
+      circleCenter,
+      circleRadius,
+      Paint()
+        ..color = Colors.white.withOpacity(contentOpacity)
+        ..style = PaintingStyle.fill
+        ..shadows = [
+          Shadow(color: Colors.black.withOpacity(0.1), offset: const Offset(0, 4), blurRadius: 8),
+        ],
+    );
+
+    // Draw Icon inside the white circle
+    final iconPainter = TextPainter(
+      text: TextSpan(
+        text: String.fromCharCode(icon.codePoint),
+        style: TextStyle(
+          fontSize: iconSize,
+          fontFamily: icon.fontFamily,
+          package: icon.fontPackage,
+          color: overlayColor.withOpacity(0.9), // Icon matches background color
+        ),
+      ),
+      textDirection: TextDirection.ltr,
+    )..layout();
 
     iconPainter.paint(
       canvas,
       Offset(
-        size.width / 2 - iconPainter.width / 2,
-        topOffset,
+        circleCenter.dx - iconPainter.width / 2,
+        circleCenter.dy - iconPainter.height / 2,
       ),
     );
 
@@ -416,7 +440,7 @@ class _ScratchPainter extends CustomPainter {
       canvas,
       Offset(
         size.width / 2 - textPainter.width / 2,
-        topOffset + iconPainter.height + spacing,
+        circleCenter.dy + circleRadius + spacing,
       ),
     );
 

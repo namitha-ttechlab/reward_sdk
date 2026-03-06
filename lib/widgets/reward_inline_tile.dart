@@ -14,6 +14,7 @@ class RewardInlineTile extends StatelessWidget {
   final String? scratchTitle;
   final Color? scratchOverlayColor;
   final Size? scratchSize;
+  final double? scratchAspectRatio;
   final Color? scratchBarrierColor;
   final VoidCallback? onRevealed;
 
@@ -30,6 +31,7 @@ class RewardInlineTile extends StatelessWidget {
     this.scratchTitle,
     this.scratchOverlayColor,
     this.scratchSize,
+    this.scratchAspectRatio,
     this.scratchBarrierColor,
     this.onRevealed,
   });
@@ -47,6 +49,7 @@ class RewardInlineTile extends StatelessWidget {
               size: scratchSize ?? const Size(300, 200),
               title: scratchTitle ?? 'Scratch to Reveal',
               overlayColor: scratchOverlayColor ?? const Color(0xFFBDBDBD),
+              aspectRatio: scratchAspectRatio ?? 0.8,
               barrierColor: scratchBarrierColor ?? const Color(0x99000000),
               onRevealed: onRevealed ?? () {},
             );

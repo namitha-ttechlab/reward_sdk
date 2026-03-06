@@ -14,6 +14,7 @@ class RewardBanner extends StatelessWidget {
   final String? scratchTitle;
   final Color? scratchOverlayColor;
   final Size? scratchSize;
+  final double? scratchAspectRatio;
   final Color? scratchBarrierColor;
   final VoidCallback? onRevealed;
 
@@ -31,6 +32,7 @@ class RewardBanner extends StatelessWidget {
     this.scratchTitle,
     this.scratchOverlayColor,
     this.scratchSize,
+    this.scratchAspectRatio,
     this.scratchBarrierColor,
     this.onRevealed,
   });
@@ -43,6 +45,7 @@ class RewardBanner extends StatelessWidget {
         size: scratchSize ?? const Size(300, 300),
         title: scratchTitle ?? 'Scratch to Reveal',
         overlayColor: scratchOverlayColor ?? const Color(0xFFBDBDBD),
+        aspectRatio: scratchAspectRatio ?? 0.8,
         barrierColor: scratchBarrierColor ?? const Color(0x99000000),
         onRevealed: onRevealed ?? () {},
       );

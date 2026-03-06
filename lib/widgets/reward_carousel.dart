@@ -101,6 +101,7 @@ class _RewardCarouselState extends State<RewardCarousel> {
                   size: item.scratchSize ?? const Size(300, 300),
                   title: item.scratchTitle ?? 'Scratch to Reveal',
                   overlayColor: item.scratchOverlayColor ?? const Color(0xFFBDBDBD),
+                  aspectRatio: item.scratchAspectRatio ?? 0.8,
                   barrierColor: item.scratchBarrierColor ?? const Color(0x99000000),
                   onRevealed: item.onRevealed ?? () {},
                 );
@@ -175,18 +176,8 @@ class _RewardCarouselState extends State<RewardCarousel> {
   }
 }
 
-class RewardCarouselItem {
-  final String title;
-  final String subtitle;
-  final String tag;
-  final String imageUrl;
-  final Color backgroundColor;
-  final VoidCallback? onTap;
-  final Widget? rewardChild;
-  final String? scratchTitle;
-  final Color? scratchOverlayColor;
-  final Size? scratchSize;
   final Color? scratchBarrierColor;
+  final double? scratchAspectRatio;
   final VoidCallback? onRevealed;
 
   const RewardCarouselItem({
@@ -200,6 +191,7 @@ class RewardCarouselItem {
     this.scratchTitle,
     this.scratchOverlayColor,
     this.scratchSize,
+    this.scratchAspectRatio,
     this.scratchBarrierColor,
     this.onRevealed,
   });
