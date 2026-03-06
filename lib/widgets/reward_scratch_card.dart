@@ -1,5 +1,4 @@
-import 'dart:math' as math;
-import 'dart:ui' as ui;
+﻿import 'dart:math' as math;
 import 'package:flutter/material.dart';
 
 class RewardScratchCard extends StatefulWidget {
@@ -9,27 +8,33 @@ class RewardScratchCard extends StatefulWidget {
   final IconData icon;
   final VoidCallback onRevealed;
   final double threshold;
+  final double? width;
+  final double? height;
   final double aspectRatio;
 
   const RewardScratchCard({
     super.key,
     required this.child,
-    this.overlayColor = const Color(0xFFBDBDBD),
+    this.overlayColor = const Color(0xFF1A237E), // Deep dark blue
     this.title = 'Scratch here to reveal',
-    this.icon = Icons.stars_rounded,
+    this.icon = Icons.redeem_outlined, // Gift icon outline
     required this.onRevealed,
     this.threshold = 0.5,
     this.aspectRatio = 1.0,
+    this.width,
+    this.height,
   });
 
   static void show(
     BuildContext context, {
     required Widget child,
-    Color overlayColor = const Color(0xFFBDBDBD),
-    String title = 'Scratch to Reveal',
-    IconData icon = Icons.stars_rounded,
+    Color overlayColor = const Color(0xFF1A237E),
+    String title = 'Scratch here to reveal',
+    IconData icon = Icons.redeem_outlined,
     required VoidCallback onRevealed,
     double aspectRatio = 1.0,
+    double? width,
+    double? height,
   }) {
     showDialog(
       context: context,
@@ -57,6 +62,8 @@ class RewardScratchCard extends StatefulWidget {
               icon: icon,
               onRevealed: onRevealed,
               aspectRatio: aspectRatio,
+              width: width,
+              height: height,
               child: child,
             ),
           ],
@@ -68,11 +75,13 @@ class RewardScratchCard extends StatefulWidget {
   static void showBottomSheet(
     BuildContext context, {
     required Widget child,
-    Color overlayColor = const Color(0xFFBDBDBD),
-    String title = 'Scratch to Reveal',
-    IconData icon = Icons.stars_rounded,
+    Color overlayColor = const Color(0xFF1A237E),
+    String title = 'Scratch here to reveal',
+    IconData icon = Icons.redeem_outlined,
     required VoidCallback onRevealed,
     double aspectRatio = 1.0,
+    double? width,
+    double? height,
   }) {
     showModalBottomSheet(
       context: context,
@@ -103,6 +112,8 @@ class RewardScratchCard extends StatefulWidget {
                 icon: icon,
                 onRevealed: onRevealed,
                 aspectRatio: aspectRatio,
+                width: width,
+                height: height,
                 child: child,
               ),
             ),
@@ -117,14 +128,15 @@ class RewardScratchCard extends StatefulWidget {
     BuildContext context, {
     required Widget child,
     Size size = const Size(300, 300),
-    Color overlayColor = const Color(0xFFBDBDBD),
+    Color overlayColor = const Color(0xFF1A237E),
     Color barrierColor = const Color(0x99000000),
-    String title = 'Scratch to Reveal',
-    IconData icon = Icons.stars_rounded,
+    String title = 'Scratch here to reveal',
+    IconData icon = Icons.redeem_outlined,
     required VoidCallback onRevealed,
     double aspectRatio = 0.8,
+    double? width,
+    double? height,
   }) {
-    final overlay = Overlay.of(context);
     late OverlayEntry entry;
 
     entry = OverlayEntry(
@@ -140,8 +152,8 @@ class RewardScratchCard extends StatefulWidget {
             ),
             Center(
               child: SizedBox(
-                width: size.width,
-                height: size.height + 60,
+                width: width ?? size.width,
+                height: (height ?? size.height) + 60,
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
@@ -159,6 +171,8 @@ class RewardScratchCard extends StatefulWidget {
                         icon: icon,
                         onRevealed: onRevealed,
                         aspectRatio: aspectRatio,
+                        width: width ?? size.width,
+                        height: height ?? size.height,
                         child: child,
                       ),
                     ),
@@ -171,7 +185,7 @@ class RewardScratchCard extends StatefulWidget {
       ),
     );
 
-    overlay.insert(entry);
+    Overlay.of(context).insert(entry);
   }
 
   @override
@@ -223,13 +237,11 @@ class _RewardScratchCardState extends State<RewardScratchCard> with SingleTicker
       widget.onRevealed();
     }
   }
-
   @override
   Widget build(BuildContext context) {
-    return AspectRatio(
-      aspectRatio: widget.aspectRatio,
-      child: Container(
-        width: double.infinity,
+    Widget content = Container(
+        width: widget.width ?? double.infinity,
+        height: widget.height,
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(24),
@@ -317,8 +329,16 @@ class _RewardScratchCardState extends State<RewardScratchCard> with SingleTicker
           ],
         ),
       ),
-    ),
-   );
+    );
+
+    if (widget.width != null || widget.height != null) {
+      return content;
+    }
+
+    return AspectRatio(
+      aspectRatio: widget.aspectRatio,
+      child: content,
+    );
   }
 }
 
@@ -346,51 +366,64 @@ class _ScratchPainter extends CustomPainter {
     // Draw background color and premium gradient
     final rrect = RRect.fromRectAndRadius(rect, const Radius.circular(24));
     
+    // Create solid dark blue gradient
     final gradient = LinearGradient(
       colors: [
         overlayColor,
-        overlayColor.withAlpha(200),
-        Colors.white.withValues(alpha: 0.15),
-        overlayColor.withAlpha(200),
-        overlayColor,
+        Color.lerp(overlayColor, Colors.black, 0.2)!, // Solid darkened variant
+        Color.lerp(overlayColor, Colors.black, 0.1)!, // Solid slightly darker
       ],
-      stops: const [0.0, 0.3, 0.5, 0.7, 1.0],
-      begin: Alignment(pulseValue * 4 - 2, -1),
-      end: Alignment(pulseValue * 4, 1),
+      begin: Alignment.topLeft,
+      end: Alignment.bottomRight,
     ).createShader(rect);
     
     canvas.drawRRect(rrect, Paint()..shader = gradient);
 
-    final cellSize = 40.0;
-    final strokeWidth = 12.0;
-    final patternPaint = Paint()
-      ..color = Colors.white.withValues(alpha: 0.04)
+    // Draw subtle abstract swirl/wave pattern
+    final wavePaint = Paint()
+      ..color = Colors.white.withValues(alpha: 0.03)
       ..style = PaintingStyle.stroke
-      ..strokeWidth = strokeWidth
+      ..strokeWidth = 15.0
       ..strokeCap = StrokeCap.round;
 
-    canvas.clipRRect(rrect);
+    final path = Path();
     
-    for (double x = -cellSize; x < size.width + cellSize; x += cellSize) {
-      for (double y = -cellSize; y < size.height + cellSize; y += cellSize) {
-        // Deterministic flip based on grid position for a consistent but "random" look
-        final isFlip = (((x + cellSize) / cellSize).floor() + ((y + cellSize) / cellSize).floor()) % 2 == 0;
-        
-        if (isFlip) {
-          canvas.drawArc(Rect.fromCircle(center: Offset(x, y), radius: cellSize / 2), 0, math.pi / 2, false, patternPaint);
-          canvas.drawArc(Rect.fromCircle(center: Offset(x + cellSize, y + cellSize), radius: cellSize / 2), math.pi, math.pi / 2, false, patternPaint);
-        } else {
-          canvas.drawArc(Rect.fromCircle(center: Offset(x + cellSize, y), radius: cellSize / 2), math.pi / 2, math.pi / 2, false, patternPaint);
-          canvas.drawArc(Rect.fromCircle(center: Offset(x, y + cellSize), radius: cellSize / 2), -math.pi / 2, math.pi / 2, false, patternPaint);
-        }
+    // Create multiple long, undulating swirly paths
+    for (int i = 0; i < 5; i++) {
+      final startY = (size.height / 4) * i;
+      path.moveTo(-50, startY);
+      
+      for (double x = 0; x < size.width + 100; x += 40) {
+        final dy = 30 * math.sin((x / 50) + i);
+        final cx = x + 20;
+        final cy = startY + dy + (20 * math.cos(x / 30));
+        path.quadraticBezierTo(cx, cy, x + 40, startY + (20 * math.sin((x + 40) / 40)));
       }
     }
+    
+    // Add some "swirls"
+    for (int i = 0; i < 4; i++) {
+        final centerX = (size.width / 3) * i;
+        final centerY = (size.height / 3) * (i % 2 == 0 ? 1 : 2);
+        
+        for (double r = 10; r < 80; r += 20) {
+            canvas.drawArc(
+                Rect.fromCircle(center: Offset(centerX, centerY), radius: r),
+                i * math.pi / 2,
+                math.pi,
+                false,
+                wavePaint
+            );
+        }
+    }
+
+    canvas.drawPath(path, wavePaint);
 
     // Draw Content centered together as a block
     final contentOpacity = (0.9 + (0.1 * math.sin(pulseValue * math.pi))).clamp(0.0, 1.0);
     
-    // Draw white circle background for the icon
-    final circleRadius = 45.0;
+    // Gift icon metrics
+    final iconRadius = 45.0;
     final iconSize = 48.0;
     const spacing = 20.0;
     
@@ -410,24 +443,15 @@ class _ScratchPainter extends CustomPainter {
       textDirection: TextDirection.ltr,
     )..layout(minWidth: 0, maxWidth: size.width - 40);
 
-    final totalContentHeight = (circleRadius * 2) + spacing + textPainter.height;
-    final centerY = size.height / 2;
+    final totalContentHeight = (iconRadius * 2) + spacing + textPainter.height;
     final topOffset = (size.height - totalContentHeight) / 2;
 
-    // Center of the white circle
-    final circleCenter = Offset(size.width / 2, topOffset + circleRadius);
+    // Center of the icon
+    final iconCenter = Offset(size.width / 2, topOffset + iconRadius);
     
-    final circlePaint = Paint()
-        ..color = Colors.white.withValues(alpha: contentOpacity)
-        ..style = PaintingStyle.fill;
+    // We draw only the icon outline on the blue gradient background
 
-    final shadowPath = Path()
-      ..addOval(Rect.fromCircle(center: circleCenter, radius: circleRadius));
-    
-    canvas.drawShadow(shadowPath, Colors.black.withOpacity(0.1), 4.0, false);
-    canvas.drawCircle(circleCenter, circleRadius, circlePaint);
-
-    // Draw Icon inside the white circle
+    // Draw Icon outline
     final iconPainter = TextPainter(
       text: TextSpan(
         text: String.fromCharCode(icon.codePoint),
@@ -435,7 +459,7 @@ class _ScratchPainter extends CustomPainter {
           fontSize: iconSize,
           fontFamily: icon.fontFamily,
           package: icon.fontPackage,
-          color: overlayColor.withValues(alpha: 0.9), // Icon matches background color
+          color: Colors.white.withValues(alpha: contentOpacity * 0.9),
         ),
       ),
       textDirection: TextDirection.ltr,
@@ -444,8 +468,8 @@ class _ScratchPainter extends CustomPainter {
     iconPainter.paint(
       canvas,
       Offset(
-        circleCenter.dx - iconPainter.width / 2,
-        circleCenter.dy - iconPainter.height / 2,
+        iconCenter.dx - iconPainter.width / 2,
+        iconCenter.dy - iconPainter.height / 2,
       ),
     );
 
@@ -453,7 +477,7 @@ class _ScratchPainter extends CustomPainter {
       canvas,
       Offset(
         size.width / 2 - textPainter.width / 2,
-        circleCenter.dy + circleRadius + spacing,
+        iconCenter.dy + iconRadius + spacing,
       ),
     );
 
