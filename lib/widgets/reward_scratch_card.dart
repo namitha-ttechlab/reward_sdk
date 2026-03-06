@@ -15,7 +15,7 @@ class RewardScratchCard extends StatefulWidget {
     super.key,
     required this.child,
     this.overlayColor = const Color(0xFFBDBDBD),
-    this.title = 'Scratch to Reveal',
+    this.title = 'Scratch here to reveal',
     this.icon = Icons.stars_rounded,
     required this.onRevealed,
     this.threshold = 0.5,
@@ -235,7 +235,7 @@ class _RewardScratchCardState extends State<RewardScratchCard> with SingleTicker
           borderRadius: BorderRadius.circular(24),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.08),
+              color: Colors.black.withValues(alpha: 0.08),
               blurRadius: 15,
               offset: const Offset(0, 6),
             ),
@@ -308,7 +308,7 @@ class _RewardScratchCardState extends State<RewardScratchCard> with SingleTicker
                     return Opacity(
                       opacity: (1.0 - _revealAnimation.value).clamp(0.0, 1.0),
                       child: Container(
-                        color: Colors.white.withOpacity(0.8),
+                        color: Colors.white.withValues(alpha: 0.8),
                       ),
                     );
                   },
@@ -350,7 +350,7 @@ class _ScratchPainter extends CustomPainter {
       colors: [
         overlayColor,
         overlayColor.withAlpha(200),
-        Colors.white.withOpacity(0.15),
+        Colors.white.withValues(alpha: 0.15),
         overlayColor.withAlpha(200),
         overlayColor,
       ],
@@ -361,15 +361,29 @@ class _ScratchPainter extends CustomPainter {
     
     canvas.drawRRect(rrect, Paint()..shader = gradient);
 
-    // Draw procedural wavy pattern (concentric waves effect)
+    final cellSize = 40.0;
+    final strokeWidth = 12.0;
     final patternPaint = Paint()
-      ..color = Colors.white.withOpacity(0.08)
+      ..color = Colors.white.withValues(alpha: 0.04)
       ..style = PaintingStyle.stroke
-      ..strokeWidth = 2.0;
-    
+      ..strokeWidth = strokeWidth
+      ..strokeCap = StrokeCap.round;
+
     canvas.clipRRect(rrect);
-    for (double i = 0; i < size.width + size.height; i += 25) {
-      canvas.drawCircle(Offset(size.width / 2, size.height / 2), i, patternPaint);
+    
+    for (double x = -cellSize; x < size.width + cellSize; x += cellSize) {
+      for (double y = -cellSize; y < size.height + cellSize; y += cellSize) {
+        // Deterministic flip based on grid position for a consistent but "random" look
+        final isFlip = (((x + cellSize) / cellSize).floor() + ((y + cellSize) / cellSize).floor()) % 2 == 0;
+        
+        if (isFlip) {
+          canvas.drawArc(Rect.fromCircle(center: Offset(x, y), radius: cellSize / 2), 0, math.pi / 2, false, patternPaint);
+          canvas.drawArc(Rect.fromCircle(center: Offset(x + cellSize, y + cellSize), radius: cellSize / 2), math.pi, math.pi / 2, false, patternPaint);
+        } else {
+          canvas.drawArc(Rect.fromCircle(center: Offset(x + cellSize, y), radius: cellSize / 2), math.pi / 2, math.pi / 2, false, patternPaint);
+          canvas.drawArc(Rect.fromCircle(center: Offset(x, y + cellSize), radius: cellSize / 2), -math.pi / 2, math.pi / 2, false, patternPaint);
+        }
+      }
     }
 
     // Draw Content centered together as a block
@@ -384,12 +398,12 @@ class _ScratchPainter extends CustomPainter {
       text: TextSpan(
         text: title.toUpperCase(),
         style: TextStyle(
-          color: Colors.white.withOpacity(contentOpacity),
+          color: Colors.white.withValues(alpha: contentOpacity),
           fontWeight: FontWeight.w800,
           fontSize: 18,
           letterSpacing: 1.5,
           shadows: [
-            Shadow(color: Colors.black.withOpacity(0.1), offset: const Offset(0, 2), blurRadius: 4),
+            Shadow(color: Colors.black.withValues(alpha: 0.1), offset: const Offset(0, 2), blurRadius: 4),
           ],
         ),
       ),
@@ -404,7 +418,7 @@ class _ScratchPainter extends CustomPainter {
     final circleCenter = Offset(size.width / 2, topOffset + circleRadius);
     
     final circlePaint = Paint()
-        ..color = Colors.white.withOpacity(contentOpacity)
+        ..color = Colors.white.withValues(alpha: contentOpacity)
         ..style = PaintingStyle.fill;
 
     final shadowPath = Path()
@@ -421,7 +435,7 @@ class _ScratchPainter extends CustomPainter {
           fontSize: iconSize,
           fontFamily: icon.fontFamily,
           package: icon.fontPackage,
-          color: overlayColor.withOpacity(0.9), // Icon matches background color
+          color: overlayColor.withValues(alpha: 0.9), // Icon matches background color
         ),
       ),
       textDirection: TextDirection.ltr,
