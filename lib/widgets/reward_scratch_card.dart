@@ -403,16 +403,15 @@ class _ScratchPainter extends CustomPainter {
     // Center of the white circle
     final circleCenter = Offset(size.width / 2, topOffset + circleRadius);
     
-    canvas.drawCircle(
-      circleCenter,
-      circleRadius,
-      Paint()
+    final circlePaint = Paint()
         ..color = Colors.white.withOpacity(contentOpacity)
-        ..style = PaintingStyle.fill
-        ..shadows = [
-          Shadow(color: Colors.black.withOpacity(0.1), offset: const Offset(0, 4), blurRadius: 8),
-        ],
-    );
+        ..style = PaintingStyle.fill;
+
+    final shadowPath = Path()
+      ..addOval(Rect.fromCircle(center: circleCenter, radius: circleRadius));
+    
+    canvas.drawShadow(shadowPath, Colors.black.withOpacity(0.1), 4.0, false);
+    canvas.drawCircle(circleCenter, circleRadius, circlePaint);
 
     // Draw Icon inside the white circle
     final iconPainter = TextPainter(

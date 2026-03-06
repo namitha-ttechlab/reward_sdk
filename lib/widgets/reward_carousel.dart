@@ -176,6 +176,17 @@ class _RewardCarouselState extends State<RewardCarousel> {
   }
 }
 
+class RewardCarouselItem {
+  final String title;
+  final String subtitle;
+  final String tag;
+  final String imageUrl;
+  final Color backgroundColor;
+  final VoidCallback? onTap;
+  final Widget? rewardChild;
+  final String? scratchTitle;
+  final Color? scratchOverlayColor;
+  final Size? scratchSize;
   final Color? scratchBarrierColor;
   final double? scratchAspectRatio;
   final VoidCallback? onRevealed;
