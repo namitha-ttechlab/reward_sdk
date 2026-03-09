@@ -235,6 +235,7 @@ class _RewardScratchCardState extends State<RewardScratchCard> with SingleTicker
   Widget build(BuildContext context) {
     Widget content = RewardConfettiCannon(
       key: _confettiKey,
+      colors: [widget.overlayColor, Colors.white],
       child: Container(
           width: widget.width ?? double.infinity,
           height: widget.height,
