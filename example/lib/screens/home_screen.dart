@@ -2,8 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:reward_sdk/reward_sdk.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
@@ -68,169 +74,170 @@ class HomeScreen extends StatelessWidget {
 
     ];
 
-    return SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Banking Dashboard Header
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.all(24),
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [Colors.deepPurple[900]!, Colors.deepPurple[700]!],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
-              borderRadius: const BorderRadius.vertical(bottom: Radius.circular(32)),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return Scaffold(
+      body: SingleChildScrollView(
+        child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Banking Dashboard Header
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(24),
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [Colors.deepPurple[900]!, Colors.deepPurple[700]!],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                  borderRadius: const BorderRadius.vertical(bottom: Radius.circular(32)),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
-                          'Total Balance',
-                          style: TextStyle(color: Colors.white.withOpacity(0.7), fontSize: 14),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Total Balance',
+                              style: TextStyle(color: Colors.white.withOpacity(0.7), fontSize: 14),
+                            ),
+                            Text(
+                              '45,230.15',
+                              style: GoogleFonts.outfit(
+                                color: Colors.white,
+                                fontSize: 32,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
                         ),
-                        Text(
-                          '45,230.15',
-                          style: GoogleFonts.outfit(
-                            color: Colors.white,
-                            fontSize: 32,
-                            fontWeight: FontWeight.bold,
+                        Container(
+                          padding: const EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                            color: Colors.white.withOpacity(0.1),
+                            borderRadius: BorderRadius.circular(16),
                           ),
+                          child: const Icon(Icons.qr_code_scanner, color: Colors.white),
                         ),
                       ],
                     ),
-                    Container(
-                      padding: const EdgeInsets.all(12),
-                      decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.1),
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                      child: const Icon(Icons.qr_code_scanner, color: Colors.white),
+                    const SizedBox(height: 24),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        _buildQuickAction(context, Icons.send_rounded, 'Transfer', '/transfer'),
+                        _buildQuickAction(context, Icons.receipt_long_rounded, 'Bills', '/bills'),
+                        _buildQuickAction(context, Icons.account_balance_wallet_rounded, 'Top Up', '/topup'),
+                        _buildQuickAction(context, Icons.more_horiz_rounded, 'More', null),
+                      ],
                     ),
                   ],
                 ),
-                const SizedBox(height: 24),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+              ),
+
+              const SizedBox(height: 24),
+              
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                child: Text(
+                  'Exclusive Partner Offers',
+                  style: GoogleFonts.outfit(
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              
+              const SizedBox(height: 12),
+              
+              RewardCarousel(
+                items: carouselItems,
+                height: 200,
+              ),
+
+              Padding(
+                padding: const EdgeInsets.all(24.0),
+                child: RewardBanner(
+                  title: 'Insurance & Protection',
+                  subtitle: 'Shield your savings with our new Premium Life Cover.',
+                  buttonText: 'EXPLORE',
+                  icon: Icons.shield_rounded,
+                  onButtonPressed: () {},
+                  scratchTitle: 'Insurance Voucher',
+                  scratchOverlayColor: Colors.blueAccent,
+                  scratchSize: const Size(320, 320),
+                  rewardChild: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Icon(Icons.security, size: 80, color: Colors.blue),
+                      const SizedBox(height: 16),
+                      Text('15% Discount', style: GoogleFonts.outfit(fontSize: 32, fontWeight: FontWeight.bold)),
+                      Text('Valid on first year premium', style: TextStyle(color: Colors.grey[600])),
+                    ],
+                  ),
+                ),
+              ),
+
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                child: Text(
+                  'Your Coupons',
+                  style: GoogleFonts.outfit(
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+
+              const SizedBox(height: 12),
+
+              RewardInlineTile(
+                title: 'Amazon Shopping',
+                subtitle: 'Flat 500 OFF on Electronics',
+                couponCode: 'AMZ500',
+                icon: Icons.shopping_bag,
+                scratchTitle: 'Amazon Coupon',
+                scratchSize: const Size(300, 200),
+                rewardChild: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    _buildQuickAction(context, Icons.send_rounded, 'Transfer', '/transfer'),
-                    _buildQuickAction(context, Icons.receipt_long_rounded, 'Bills', '/bills'),
-                    _buildQuickAction(context, Icons.account_balance_wallet_rounded, 'Top Up', '/topup'),
-                    _buildQuickAction(context, Icons.more_horiz_rounded, 'More', null),
+                     const Icon(Icons.store, size: 80, color: Colors.orange),
+                     const SizedBox(height: 16),
+                     Text('AMZ500', style: GoogleFonts.outfit(fontSize: 32, fontWeight: FontWeight.bold, letterSpacing: 4)),
+                     Text('Tap to copy code', style: TextStyle(color: Colors.grey[600])),
                   ],
                 ),
-              ],
-            ),
-          ),
-
-          const SizedBox(height: 24),
-          
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24.0),
-            child: Text(
-              'Exclusive Partner Offers',
-              style: GoogleFonts.outfit(
-                fontSize: 22,
-                fontWeight: FontWeight.bold,
               ),
-            ),
-          ),
-          
-          const SizedBox(height: 12),
-          
-          RewardCarousel(
-            items: carouselItems,
-            height: 200,
-          ),
 
-          Padding(
-            padding: const EdgeInsets.all(24.0),
-            child: RewardBanner(
-              title: 'Insurance & Protection',
-              subtitle: 'Shield your savings with our new Premium Life Cover.',
-              buttonText: 'EXPLORE',
-              icon: Icons.shield_rounded,
-              onButtonPressed: () {},
-              scratchTitle: 'Insurance Voucher',
-              scratchOverlayColor: Colors.blueAccent,
-              scratchSize: const Size(320, 320),
-              rewardChild: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Icon(Icons.security, size: 80, color: Colors.blue),
-                  const SizedBox(height: 16),
-                  Text('15% Discount', style: GoogleFonts.outfit(fontSize: 32, fontWeight: FontWeight.bold)),
-                  Text('Valid on first year premium', style: TextStyle(color: Colors.grey[600])),
-                ],
+              const SizedBox(height: 24),
+
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                child: Text(
+                  'Recent Transactions',
+                  style: GoogleFonts.outfit(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ),
-            ),
+              
+              const SizedBox(height: 12),
+              
+              _buildTransactionItem('Apple Store', '-1,299.00', 'Electronic', Icons.laptop_mac),
+              _buildTransactionItem('Starbucks Coffee', '-12.50', 'Dining', Icons.coffee),
+              _buildTransactionItem('Salary Credit', '+4,500.00', 'Income', Icons.work),
+              
+              const SizedBox(height: 40),
+            ],
           ),
-
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24.0),
-            child: Text(
-              'Your Coupons',
-              style: GoogleFonts.outfit(
-                fontSize: 22,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-
-          const SizedBox(height: 12),
-
-          RewardInlineTile(
-            title: 'Amazon Shopping',
-            subtitle: 'Flat 500 OFF on Electronics',
-            couponCode: 'AMZ500',
-            icon: Icons.shopping_bag,
-            scratchTitle: 'Amazon Coupon',
-            scratchSize: const Size(300, 200),
-            rewardChild: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                 const Icon(Icons.store, size: 80, color: Colors.orange),
-                 const SizedBox(height: 16),
-                 Text('AMZ500', style: GoogleFonts.outfit(fontSize: 32, fontWeight: FontWeight.bold, letterSpacing: 4)),
-                 Text('Tap to copy code', style: TextStyle(color: Colors.grey[600])),
-              ],
-            ),
-          ),
-
-          const SizedBox(height: 24),
-
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24.0),
-            child: Text(
-              'Recent Transactions',
-              style: GoogleFonts.outfit(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-          
-          const SizedBox(height: 12),
-          
-          _buildTransactionItem('Apple Store', '-1,299.00', 'Electronic', Icons.laptop_mac),
-          _buildTransactionItem('Starbucks Coffee', '-12.50', 'Dining', Icons.coffee),
-          _buildTransactionItem('Salary Credit', '+4,500.00', 'Income', Icons.work),
-          
-          const SizedBox(height: 40),
-        ],
-      ),
+        ),
+      
     );
-  }
-
-
+ }
   Widget _buildQuickAction(BuildContext context, IconData icon, String label, String? route) {
     return GestureDetector(
       onTap: () {
@@ -278,5 +285,10 @@ class HomeScreen extends StatelessWidget {
         ),
       ),
     );
-  }
 }
+  
+}
+ 
+  
+
+ 

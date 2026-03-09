@@ -1,12 +1,12 @@
 ﻿import 'dart:math' as math;
 import 'package:flutter/material.dart';
+import 'reward_confetti_cannon.dart';
 
 class RewardScratchCard extends StatefulWidget {
   final Widget child;
   final Color overlayColor;
   final String title;
   final IconData icon;
-  final VoidCallback onRevealed;
   final double threshold;
   final double? width;
   final double? height;
@@ -18,7 +18,6 @@ class RewardScratchCard extends StatefulWidget {
     this.overlayColor = const Color(0xFF1A237E), // Deep dark blue
     this.title = 'Scratch here to reveal',
     this.icon = Icons.redeem_outlined, // Gift icon outline
-    required this.onRevealed,
     this.threshold = 0.5,
     this.aspectRatio = 1.0,
     this.width,
@@ -31,7 +30,6 @@ class RewardScratchCard extends StatefulWidget {
     Color overlayColor = const Color(0xFF1A237E),
     String title = 'Scratch here to reveal',
     IconData icon = Icons.redeem_outlined,
-    required VoidCallback onRevealed,
     double aspectRatio = 1.0,
     double? width,
     double? height,
@@ -60,7 +58,6 @@ class RewardScratchCard extends StatefulWidget {
               overlayColor: overlayColor,
               title: title,
               icon: icon,
-              onRevealed: onRevealed,
               aspectRatio: aspectRatio,
               width: width,
               height: height,
@@ -78,7 +75,6 @@ class RewardScratchCard extends StatefulWidget {
     Color overlayColor = const Color(0xFF1A237E),
     String title = 'Scratch here to reveal',
     IconData icon = Icons.redeem_outlined,
-    required VoidCallback onRevealed,
     double aspectRatio = 1.0,
     double? width,
     double? height,
@@ -110,7 +106,6 @@ class RewardScratchCard extends StatefulWidget {
                 overlayColor: overlayColor,
                 title: title,
                 icon: icon,
-                onRevealed: onRevealed,
                 aspectRatio: aspectRatio,
                 width: width,
                 height: height,
@@ -132,7 +127,6 @@ class RewardScratchCard extends StatefulWidget {
     Color barrierColor = const Color(0x99000000),
     String title = 'Scratch here to reveal',
     IconData icon = Icons.redeem_outlined,
-    required VoidCallback onRevealed,
     double aspectRatio = 0.8,
     double? width,
     double? height,
@@ -169,7 +163,6 @@ class RewardScratchCard extends StatefulWidget {
                         overlayColor: overlayColor,
                         title: title,
                         icon: icon,
-                        onRevealed: onRevealed,
                         aspectRatio: aspectRatio,
                         width: width ?? size.width,
                         height: height ?? size.height,
@@ -197,6 +190,7 @@ class _RewardScratchCardState extends State<RewardScratchCard> with SingleTicker
   bool _isRevealed = false;
   late AnimationController _controller;
   late Animation<double> _revealAnimation;
+  final GlobalKey<RewardConfettiCannonState> _confettiKey = GlobalKey<RewardConfettiCannonState>();
 
   @override
   void initState() {
@@ -234,29 +228,31 @@ class _RewardScratchCardState extends State<RewardScratchCard> with SingleTicker
         _isRevealed = true;
       });
       _controller.forward();
-      widget.onRevealed();
+      _confettiKey.currentState?.trigger();
     }
   }
   @override
   Widget build(BuildContext context) {
-    Widget content = Container(
-        width: widget.width ?? double.infinity,
-        height: widget.height,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(24),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.08),
-              blurRadius: 15,
-              offset: const Offset(0, 6),
-            ),
-          ],
-        ),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(24),
-          child: Stack(
-            children: [
+    Widget content = RewardConfettiCannon(
+      key: _confettiKey,
+      child: Container(
+          width: widget.width ?? double.infinity,
+          height: widget.height,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(24),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.08),
+                blurRadius: 15,
+                offset: const Offset(0, 6),
+              ),
+            ],
+          ),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(24),
+            child: Stack(
+              children: [
             // Bottom Layer: The Reward
             Center(
               child: AnimatedBuilder(
@@ -329,7 +325,7 @@ class _RewardScratchCardState extends State<RewardScratchCard> with SingleTicker
           ],
         ),
       ),
-    );
+    ));
 
     if (widget.width != null || widget.height != null) {
       return content;

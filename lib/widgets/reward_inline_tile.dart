@@ -16,7 +16,6 @@ class RewardInlineTile extends StatelessWidget {
   final Size? scratchSize;
   final double? scratchAspectRatio;
   final Color? scratchBarrierColor;
-  final VoidCallback? onRevealed;
 
   const RewardInlineTile({
     super.key,
@@ -33,7 +32,6 @@ class RewardInlineTile extends StatelessWidget {
     this.scratchSize,
     this.scratchAspectRatio,
     this.scratchBarrierColor,
-    this.onRevealed,
   });
 
   @override
@@ -51,7 +49,6 @@ class RewardInlineTile extends StatelessWidget {
               overlayColor: scratchOverlayColor ?? const Color(0xFFBDBDBD),
               aspectRatio: scratchAspectRatio ?? 0.8,
               barrierColor: scratchBarrierColor ?? const Color(0x99000000),
-              onRevealed: onRevealed ?? () {},
             );
           }
           if (onTap != null) {

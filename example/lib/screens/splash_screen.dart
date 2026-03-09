@@ -67,7 +67,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
                         shape: BoxShape.circle,
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.purpleAccent.withOpacity(0.5),
+                            color: Colors.purpleAccent.withValues(alpha: 0.5),
                             blurRadius: 40,
                             spreadRadius: 10,
                           )
@@ -93,7 +93,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
                     Text(
                       'SMART LOYALTY ENGINE',
                       style: GoogleFonts.outfit(
-                        color: Colors.white.withOpacity(0.7),
+                        color: Colors.white.withValues(alpha: 0.7),
                         fontSize: 14,
                         fontWeight: FontWeight.w500,
                         letterSpacing: 2,

@@ -80,7 +80,6 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
       stayButtonText: 'Claim My Reward',
       scratchTitle: 'Your Bonus Reward',
       scratchOverlayColor: Colors.deepPurple,
-      onRevealed: () {},
       rewardChild: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -130,7 +129,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
                 shape: BoxShape.circle,
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.05),
+                    color: Colors.black.withValues(alpha: 0.05),
                     blurRadius: 10,
                   )
                 ],
@@ -158,7 +157,6 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
                   title: 'Mystery Achievement',
                   overlayColor: Colors.deepPurple,
                   size: const Size(300, 300),
-                  onRevealed: () {},
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [

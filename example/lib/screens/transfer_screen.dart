@@ -54,7 +54,7 @@ class TransferScreen extends StatelessWidget {
                 borderRadius: BorderRadius.circular(24),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.05),
+                    color: Colors.black.withValues(alpha: 0.05),
                     blurRadius: 20,
                   )
                 ],
@@ -124,7 +124,7 @@ class TransferScreen extends StatelessWidget {
             width: 56,
             height: 56,
             decoration: BoxDecoration(
-              color: isAction ? color.withOpacity(0.1) : color.withOpacity(0.2),
+              color: isAction ? color.withValues(alpha: 0.1) : color.withValues(alpha: 0.2),
               shape: BoxShape.circle,
               border: isAction ? Border.all(color: color, width: 2, style: BorderStyle.solid) : null,
             ),

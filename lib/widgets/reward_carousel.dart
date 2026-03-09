@@ -103,7 +103,6 @@ class _RewardCarouselState extends State<RewardCarousel> {
                   overlayColor: item.scratchOverlayColor ?? const Color(0xFFBDBDBD),
                   aspectRatio: item.scratchAspectRatio ?? 0.8,
                   barrierColor: item.scratchBarrierColor ?? const Color(0x99000000),
-                  onRevealed: item.onRevealed ?? () {},
                 );
               }
               if (item.onTap != null) {
@@ -189,7 +188,6 @@ class RewardCarouselItem {
   final Size? scratchSize;
   final Color? scratchBarrierColor;
   final double? scratchAspectRatio;
-  final VoidCallback? onRevealed;
 
   const RewardCarouselItem({
     required this.title,
@@ -204,6 +202,5 @@ class RewardCarouselItem {
     this.scratchSize,
     this.scratchAspectRatio,
     this.scratchBarrierColor,
-    this.onRevealed,
   });
 }

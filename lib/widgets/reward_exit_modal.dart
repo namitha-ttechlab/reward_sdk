@@ -16,7 +16,6 @@ class RewardExitModal extends StatelessWidget {
   final String? scratchTitle;
   final Color? scratchOverlayColor;
   final double? scratchAspectRatio;
-  final VoidCallback? onRevealed;
 
   const RewardExitModal({
     super.key,
@@ -31,7 +30,6 @@ class RewardExitModal extends StatelessWidget {
     this.scratchTitle,
     this.scratchOverlayColor,
     this.scratchAspectRatio,
-    this.onRevealed,
   });
 
   static Future<bool?> show(
@@ -47,7 +45,6 @@ class RewardExitModal extends StatelessWidget {
     String? scratchTitle,
     Color? scratchOverlayColor,
     double? scratchAspectRatio,
-    VoidCallback? onRevealed,
   }) {
     return showDialog<bool>(
       context: context,
@@ -64,7 +61,6 @@ class RewardExitModal extends StatelessWidget {
         scratchTitle: scratchTitle,
         scratchOverlayColor: scratchOverlayColor,
         scratchAspectRatio: scratchAspectRatio,
-        onRevealed: onRevealed,
       ),
     );
   }
@@ -109,7 +105,6 @@ class RewardExitModal extends StatelessWidget {
                 overlayColor: scratchOverlayColor ?? const Color(0xFFBDBDBD),
                 aspectRatio: scratchAspectRatio ?? 1.0,
                 title: scratchTitle ?? 'Scratch to Reveal',
-                onRevealed: onRevealed ?? () {},
                 child: rewardChild ?? const SizedBox(),
               ),
             ),

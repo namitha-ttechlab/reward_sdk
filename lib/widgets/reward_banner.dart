@@ -16,7 +16,6 @@ class RewardBanner extends StatelessWidget {
   final Size? scratchSize;
   final double? scratchAspectRatio;
   final Color? scratchBarrierColor;
-  final VoidCallback? onRevealed;
 
   const RewardBanner({
     super.key,
@@ -34,7 +33,6 @@ class RewardBanner extends StatelessWidget {
     this.scratchSize,
     this.scratchAspectRatio,
     this.scratchBarrierColor,
-    this.onRevealed,
   });
 
   void _handleTap(BuildContext context) {
@@ -47,7 +45,6 @@ class RewardBanner extends StatelessWidget {
         overlayColor: scratchOverlayColor ?? const Color(0xFFBDBDBD),
         aspectRatio: scratchAspectRatio ?? 0.8,
         barrierColor: scratchBarrierColor ?? const Color(0x99000000),
-        onRevealed: onRevealed ?? () {},
       );
     }
     if (onTap != null) {
