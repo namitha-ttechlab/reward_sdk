@@ -27,8 +27,9 @@ class _Particle {
 
   _Particle(Offset startPos, Color startColor, {double? customAngle, double? customSpeed}) {
     position = startPos;
+    // Default angles if not provided
     final angle = customAngle ?? (-math.pi / 2 + (_random.nextDouble() - 0.5) * 1.2); 
-    final speed = customSpeed ?? (15.0 + _random.nextDouble() * 25.0);
+    final speed = customSpeed ?? (20.0 + _random.nextDouble() * 30.0); // Slightly faster for full screen blast
     velocity = Offset(math.cos(angle) * speed, math.sin(angle) * speed);
     color = startColor;
     size = 6.0 + _random.nextDouble() * 10.0;
@@ -98,10 +99,12 @@ class RewardConfettiCannon extends StatefulWidget {
 }
 
 class RewardConfettiCannonState extends State<RewardConfettiCannon> with TickerProviderStateMixin {
-  late AnimationController _anticipationController;
+  late AnimationController _cannonController;
   late AnimationController _particleController;
   final List<_Particle> _particles = [];
   bool _isAnimating = false;
+  bool _showCannons = false;
+  List<Offset> _blastPositions = [];
   OverlayEntry? _overlayEntry;
 
   final List<Color> _defaultColors = [
@@ -118,9 +121,9 @@ class RewardConfettiCannonState extends State<RewardConfettiCannon> with TickerP
   void initState() {
     super.initState();
 
-    _anticipationController = AnimationController(
+    _cannonController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 600),
+      duration: const Duration(milliseconds: 400),
     );
 
     _particleController = AnimationController(
@@ -152,7 +155,7 @@ class RewardConfettiCannonState extends State<RewardConfettiCannon> with TickerP
   @override
   void dispose() {
     _removeOverlay();
-    _anticipationController.dispose();
+    _cannonController.dispose();
     _particleController.dispose();
     super.dispose();
   }
@@ -163,8 +166,18 @@ class RewardConfettiCannonState extends State<RewardConfettiCannon> with TickerP
       _overlayEntry = OverlayEntry(
         builder: (context) => Positioned.fill(
           child: IgnorePointer(
-            child: CustomPaint(
-              painter: _ConfettiPainter(_particles),
+            child: AnimatedBuilder(
+              animation: Listenable.merge([_particleController, _cannonController]),
+              builder: (context, child) {
+                return CustomPaint(
+                  painter: _ConfettiPainter(
+                    particles: _particles,
+                    cannonScale: CurvedAnimation(parent: _cannonController, curve: Curves.elasticOut).value,
+                    showCannons: _showCannons,
+                    blastPositions: _blastPositions,
+                  ),
+                );
+              },
             ),
           ),
         ),
@@ -185,74 +198,131 @@ class RewardConfettiCannonState extends State<RewardConfettiCannon> with TickerP
     setState(() {
       _isAnimating = true;
       _particles.clear();
+      _showCannons = true;
     });
 
-    // Shake & Charge up animation
-    await _anticipationController.forward(from: 0.0);
-
     if (!mounted) return;
+    final screenSize = MediaQuery.of(context).size;
     final colors = widget.colors ?? _defaultColors;
-    final renderBox = context.findRenderObject() as RenderBox?;
-    if (renderBox != null) {
-      final size = renderBox.size;
-      final startPos = renderBox.localToGlobal(Offset(size.width / 2, size.height / 2));
-      
-      // Initial strong blast
-      for (int i = 0; i < 120; i++) {
-        _particles.add(_Particle(startPos, colors[_random.nextInt(colors.length)]));
-      }
-      
-      _updateOverlay();
-      _particleController.forward(from: 0.0);
 
-      // Stage 2 (Aftershock burst) for a more layered "blast" feel
-      await Future.delayed(const Duration(milliseconds: 200));
-      if (mounted) {
-        for (int i = 0; i < 80; i++) {
-          _particles.add(_Particle(
-            startPos, 
-            colors[_random.nextInt(colors.length)],
-            customSpeed: 10.0 + _random.nextDouble() * 15.0, // Slightly slower secondary particles
-          ));
-        }
+    _blastPositions = [
+      Offset(50, screenSize.height - 50),
+      Offset(screenSize.width - 50, screenSize.height - 50),
+    ];
+    
+    _updateOverlay();
+
+    // Pop the cannons up
+    await _cannonController.forward(from: 0.0);
+    await Future.delayed(const Duration(milliseconds: 100)); // small hold
+    
+    if (!mounted) return;
+
+    setState(() {
+      _showCannons = false; // Hide cannons as blast happens
+    });
+
+    // Angles for blasting inwards and UPWARDS
+    final double rightBlastAngle = -math.pi / 2.5; // More upward
+    final double leftBlastAngle = -math.pi + math.pi / 2.5;
+
+    // Initial strong blast from BOTH sides
+    for (int i = 0; i < 70; i++) {
+      // Left cannon
+      double angleL = rightBlastAngle + (_random.nextDouble() - 0.5) * 0.6;
+      _particles.add(_Particle(
+        _blastPositions[0], 
+        colors[_random.nextInt(colors.length)], 
+        customAngle: angleL,
+        customSpeed: 25.0 + _random.nextDouble() * 30.0, // Faster/higher
+      ));
+      
+      // Right cannon
+      double angleR = leftBlastAngle + (_random.nextDouble() - 0.5) * 0.6;
+      _particles.add(_Particle(
+        _blastPositions[1], 
+        colors[_random.nextInt(colors.length)], 
+        customAngle: angleR,
+        customSpeed: 25.0 + _random.nextDouble() * 30.0,
+      ));
+    }
+    
+    _updateOverlay();
+    _particleController.forward(from: 0.0);
+
+    // Stage 2 (Aftershock burst)
+    await Future.delayed(const Duration(milliseconds: 200));
+    if (mounted) {
+      for (int i = 0; i < 50; i++) {
+        // Left cannon
+        double angleL = rightBlastAngle + (_random.nextDouble() - 0.5) * 0.8;
+        _particles.add(_Particle(
+          _blastPositions[0], 
+          colors[_random.nextInt(colors.length)],
+          customAngle: angleL,
+          customSpeed: 20.0 + _random.nextDouble() * 25.0,
+        ));
+        
+        // Right cannon
+        double angleR = leftBlastAngle + (_random.nextDouble() - 0.5) * 0.8;
+        _particles.add(_Particle(
+          _blastPositions[1], 
+          colors[_random.nextInt(colors.length)],
+          customAngle: angleR,
+          customSpeed: 20.0 + _random.nextDouble() * 25.0,
+        ));
       }
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedBuilder(
-      animation: _anticipationController,
-      builder: (context, child) {
-        final val = _anticipationController.value;
-        if (val == 0.0) return child!;
-
-        // Scale down slightly and shake vigorously as it charges
-        final scale = 1.0 - (val * 0.08); 
-        final intensity = val * 6.0; 
-        final dx = math.sin(val * math.pi * 15) * intensity;
-        final dy = math.cos(val * math.pi * 15) * (intensity * 0.3);
-
-        return Transform(
-          alignment: Alignment.center,
-          transform: Matrix4.identity()
-            ..translate(dx, dy)
-            ..scale(scale),
-          child: child,
-        );
-      },
-      child: widget.child,
-    );
+    return widget.child;
   }
 }
 
 class _ConfettiPainter extends CustomPainter {
   final List<_Particle> particles;
+  final double cannonScale;
+  final bool showCannons;
+  final List<Offset> blastPositions;
 
-  _ConfettiPainter(this.particles);
+  _ConfettiPainter({
+    required this.particles,
+    this.cannonScale = 0.0,
+    this.showCannons = false,
+    this.blastPositions = const [],
+  });
 
   @override
   void paint(Canvas canvas, Size size) {
+    if (showCannons && cannonScale > 0.0) {
+      for (int i = 0; i < blastPositions.length; i++) {
+        final pos = blastPositions[i];
+        final textPainter = TextPainter(
+          text: const TextSpan(
+            text: '🎉',
+            style: TextStyle(fontSize: 60),
+          ),
+          textDirection: TextDirection.ltr,
+        )..layout();
+
+        canvas.save();
+        canvas.translate(pos.dx, pos.dy);
+        
+        // Mirror the right cannon (index 1) so it points inwards
+        final double scaleX = (i == 1) ? -cannonScale : cannonScale;
+        
+        // Scale from bottom center of the emoji
+        canvas.scale(scaleX, cannonScale);
+        textPainter.paint(
+          canvas,
+          Offset(-textPainter.width / 2, -textPainter.height + 10), // Adjust so blast originates near top
+        );
+        canvas.restore();
+      }
+    }
+
     for (final p in particles) {
       final paint = Paint()
         ..color = p.color.withValues(alpha: p.opacity)
